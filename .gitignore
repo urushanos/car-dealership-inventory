@@ -1,0 +1,10 @@
+# Dependencies
+node_modules/
+
+# Production/Build outputs
+.next/
+dist/
+
+# Environmental secrets / Local variables
+.env
+.env.local
