@@ -8,3 +8,4 @@ dist/
 # Environmental secrets / Local variables
 .env
 .env.local
+.env.example
