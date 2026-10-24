@@ -66,3 +66,25 @@ export const searchVehicleSchema = z
 export type CreateVehicleInput = z.infer<typeof createVehicleSchema>;
 export type UpdateVehicleInput = z.infer<typeof updateVehicleSchema>;
 export type SearchVehicleQuery = z.infer<typeof searchVehicleSchema>;
+
+export const restockVehicleSchema = z
+  .object({
+    quantity: z
+      .number()
+      .int('Restock quantity must be a positive integer')
+      .positive('Restock quantity must be a positive integer')
+      .optional(),
+    quantityToAdd: z
+      .number()
+      .int('Restock quantity must be a positive integer')
+      .positive('Restock quantity must be a positive integer')
+      .optional(),
+  })
+  .refine(
+    (data) => data.quantity !== undefined || data.quantityToAdd !== undefined,
+    {
+      message: 'Restock quantity is required',
+    }
+  );
+
+export type RestockVehicleInput = z.infer<typeof restockVehicleSchema>;

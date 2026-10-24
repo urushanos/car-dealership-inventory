@@ -3,6 +3,7 @@ import type { Express, Request, Response } from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.routes.js';
 import vehicleRoutes from './routes/vehicle.routes.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 const app: Express = express();
 
@@ -23,6 +24,9 @@ app.use('/api/vehicles', vehicleRoutes);
 app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date() });
 });
+
+// Common error handler middleware
+app.use(errorHandler);
 
 // Export the setup context safely for integration testing frameworks (Supertest)
 export default app;

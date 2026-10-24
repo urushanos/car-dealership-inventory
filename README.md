@@ -27,7 +27,10 @@ All vehicle endpoints are protected by authentication (`authenticate` middleware
 | `PUT` | `/api/vehicles/:id` | Authenticated; **Admin Only** | Update existing vehicle inventory details |
 | `DELETE` | `/api/vehicles/:id` | **Admin Only** | Remove vehicle from dealership inventory |
 
-> **Design Decision Note**: While the specification explicitly requires authentication for vehicle access and admin authorization for deletion, this system enforces **admin authorization for both creation (`POST`) and editing (`PUT`)** as well. This prevents ordinary authenticated customers/users from modifying vehicle inventory, prices, or quantities, reserving inventory management exclusively to dealership administrators.
+| `POST` | `/api/vehicles/:id/purchase` | Authenticated (User & Admin) | Purchase a single vehicle document atomically |
+| `POST` | `/api/vehicles/:id/restock` | Authenticated; **Admin Only** | Restock vehicle inventory with a positive integer quantity |
+
+> **Design Decision Note**: While the specification explicitly requires authentication for vehicle access and admin authorization for deletion, this system enforces **admin authorization for both creation (`POST`), editing (`PUT`), and restocking (`POST /:id/restock`)** as well. This prevents ordinary authenticated customers/users from modifying vehicle inventory, prices, or quantities, reserving inventory management exclusively to dealership administrators.
 
 ---
 
@@ -96,6 +99,34 @@ All vehicle endpoints are protected by authentication (`authenticate` middleware
   - Returns `404 Not Found` if the vehicle does not exist.
   - Returns `200 OK` on successful removal.
 
+### 6. Purchasing a Vehicle
+- **Endpoint**: `POST /api/vehicles/:id/purchase`
+- **Headers**: `Authorization: Bearer <token>` (User or Admin)
+- **Behavior**:
+  - Conditionally and atomically decrements `quantity` by 1 if `quantity > 0`.
+  - Returns `200 OK` with updated vehicle.
+  - Returns `409 Conflict` ("Vehicle out of stock") if stock is 0.
+  - Returns `404 Not Found` if vehicle does not exist.
+  - Returns `400 Bad Request` for invalid vehicle ID format.
+  - Concurrency guarantees stock never drops below 0.
+
+### 7. Restocking a Vehicle
+- **Endpoint**: `POST /api/vehicles/:id/restock`
+- **Headers**: `Authorization: Bearer <admin-token>`
+- **Body**:
+  ```json
+  {
+    "quantity": 5
+  }
+  ```
+- **Behavior**:
+  - Rejects regular user with `403 Forbidden` ("Admin access required").
+  - Accepts `quantity` or `quantityToAdd` as positive integers.
+  - Rejects zero, negative, and fractional restock amounts with `400 Bad Request`.
+  - Atomically increments vehicle quantity.
+  - Returns `404 Not Found` if vehicle does not exist.
+  - Returns `400 Bad Request` for invalid vehicle ID.
+
 ---
 
 ## Running Tests
@@ -108,3 +139,4 @@ Runs the full Vitest integration suite:
 - `app.test.ts`: Core database connectivity and model validation
 - `auth.test.ts`: Registration, login, password hashing, JWT verification, and admin seeding
 - `vehicles.test.ts`: Vehicle CRUD, search filters, role guards, and edge cases
+- `purchase-restock.test.ts`: Purchase and restock operations, atomic decrements, concurrency guards, and role protection

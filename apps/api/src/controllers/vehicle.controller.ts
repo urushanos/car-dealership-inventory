@@ -1,9 +1,10 @@
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import {
   createVehicleSchema,
   updateVehicleSchema,
   searchVehicleSchema,
+  restockVehicleSchema,
 } from '../schemas/vehicle.schema.js';
 import {
   vehicleService,
@@ -144,5 +145,54 @@ export async function deleteVehicle(req: Request, res: Response) {
     return res.status(500).json({
       message: 'Internal server error',
     });
+  }
+}
+
+export async function purchaseVehicleHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = req.params.id as string;
+    const vehicle = await vehicleService.purchaseVehicle(id);
+    const vehicleObj = (vehicle as any).toObject ? (vehicle as any).toObject() : vehicle;
+    return res.status(200).json({
+      ...vehicleObj,
+      message: 'Vehicle purchased successfully',
+      vehicle: vehicleObj,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function restockVehicleHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const parsed = restockVehicleSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      message: 'Validation failed',
+      errors: parsed.error.issues,
+    });
+  }
+
+  const quantityToAdd = (parsed.data.quantityToAdd ?? parsed.data.quantity)!;
+
+  try {
+    const id = req.params.id as string;
+    const vehicle = await vehicleService.restockVehicle(id, quantityToAdd);
+    const vehicleObj = (vehicle as any).toObject ? (vehicle as any).toObject() : vehicle;
+    return res.status(200).json({
+      ...vehicleObj,
+      message: 'Vehicle restocked successfully',
+      vehicle: vehicleObj,
+    });
+  } catch (error) {
+    next(error);
   }
 }

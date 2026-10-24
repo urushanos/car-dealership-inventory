@@ -61,6 +61,8 @@ describe('Phase 3 — Vehicle CRUD and Search API Tests', () => {
         { method: 'post', path: '/api/vehicles', data: { make: 'Toyota' } },
         { method: 'put', path: `/api/vehicles/${dummyId}`, data: { price: 25000 } },
         { method: 'delete', path: `/api/vehicles/${dummyId}` },
+        { method: 'post', path: `/api/vehicles/${dummyId}/purchase` },
+        { method: 'post', path: `/api/vehicles/${dummyId}/restock`, data: { quantity: 5 } },
       ];
 
       for (const ep of endpoints) {

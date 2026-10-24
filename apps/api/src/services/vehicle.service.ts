@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { Vehicle, type IVehicle } from '../models/Vehicle.js';
 import type {
   CreateVehicleInput,
@@ -120,11 +121,81 @@ export async function deleteVehicle(id: string): Promise<IVehicle | null> {
   return Vehicle.findByIdAndDelete(id);
 }
 
+export async function purchaseVehicle(id: string) {
+  if (!Types.ObjectId.isValid(id)) {
+    throw Object.assign(new Error("Invalid vehicle ID"), {
+      statusCode: 400
+    });
+  }
+
+  const vehicle = await Vehicle.findOneAndUpdate(
+    {
+      _id: id,
+      quantity: { $gt: 0 }
+    },
+    {
+      $inc: { quantity: -1 }
+    },
+    {
+      new: true,
+      returnDocument: 'after',
+      runValidators: true
+    }
+  );
+
+  if (vehicle) return vehicle;
+
+  const exists = await Vehicle.exists({ _id: id });
+
+  if (!exists) {
+    throw Object.assign(new Error("Vehicle not found"), {
+      statusCode: 404
+    });
+  }
+
+  throw Object.assign(new Error("Vehicle out of stock"), {
+    statusCode: 409
+  });
+}
+
+export async function restockVehicle(
+  id: string,
+  quantityToAdd: number
+) {
+  if (!Types.ObjectId.isValid(id)) {
+    throw Object.assign(new Error("Invalid vehicle ID"), {
+      statusCode: 400
+    });
+  }
+
+  if (!Number.isInteger(quantityToAdd) || quantityToAdd <= 0) {
+    throw Object.assign(new Error("Restock quantity must be a positive integer"), {
+      statusCode: 400
+    });
+  }
+
+  const vehicle = await Vehicle.findByIdAndUpdate(
+    id,
+    { $inc: { quantity: quantityToAdd } },
+    { new: true, returnDocument: 'after', runValidators: true }
+  );
+
+  if (!vehicle) {
+    throw Object.assign(new Error("Vehicle not found"), {
+      statusCode: 404
+    });
+  }
+
+  return vehicle;
+}
+
 export const vehicleService = {
   searchVehicles,
   getAllVehicles,
   getVehicleById,
   createVehicle,
   updateVehicle,
-  deleteVehicle
+  deleteVehicle,
+  purchaseVehicle,
+  restockVehicle
 };

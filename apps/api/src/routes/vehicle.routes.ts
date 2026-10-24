@@ -5,7 +5,9 @@ import {
   getVehicleById,
   createVehicle,
   updateVehicle,
-  deleteVehicle
+  deleteVehicle,
+  purchaseVehicleHandler,
+  restockVehicleHandler,
 } from '../controllers/vehicle.controller.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { authorizeAdmin } from '../middleware/authorizeAdmin.js';
@@ -21,5 +23,9 @@ router.get('/:id', authenticate, getVehicleById);
 router.post('/', authenticate, authorizeAdmin, createVehicle);
 router.put('/:id', authenticate, authorizeAdmin, updateVehicle);
 router.delete('/:id', authenticate, authorizeAdmin, deleteVehicle);
+
+// Inventory lifecycle endpoints (purchase: authenticated users; restock: admin-only)
+router.post('/:id/purchase', authenticate, purchaseVehicleHandler);
+router.post('/:id/restock', authenticate, authorizeAdmin, restockVehicleHandler);
 
 export default router;
