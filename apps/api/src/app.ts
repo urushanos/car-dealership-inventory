@@ -2,12 +2,19 @@ import express from 'express';
 import type { Express, Request, Response } from 'express'; 
 import cors from 'cors';
 import { Vehicle } from './models/Vehicle.js';
+import authRoutes from './routes/auth.routes.js';
 
 const app: Express = express();
 
 // Standard Operational Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
+
+// Mount authentication and authorization routes
+app.use('/api/auth', authRoutes);
 
 // API Status / Health Assessment Endpoint
 app.get('/api/health', (req: Request, res: Response) => {
