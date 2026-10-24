@@ -1,8 +1,8 @@
 import express from 'express';
 import type { Express, Request, Response } from 'express'; 
 import cors from 'cors';
-import { Vehicle } from './models/Vehicle.js';
 import authRoutes from './routes/auth.routes.js';
+import vehicleRoutes from './routes/vehicle.routes.js';
 
 const app: Express = express();
 
@@ -16,19 +16,12 @@ app.use(express.json());
 // Mount authentication and authorization routes
 app.use('/api/auth', authRoutes);
 
+// Mount vehicle inventory routes
+app.use('/api/vehicles', vehicleRoutes);
+
 // API Status / Health Assessment Endpoint
 app.get('/api/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date() });
-});
-
-// Sample Dynamic Endpoint showing model integration
-app.get('/api/vehicles', async (req: Request, res: Response) => {
-  try {
-    const inventory = await Vehicle.find({});
-    res.status(200).json(inventory);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch inventory dataset.' });
-  }
 });
 
 // Export the setup context safely for integration testing frameworks (Supertest)
