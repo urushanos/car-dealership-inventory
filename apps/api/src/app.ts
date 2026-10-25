@@ -8,10 +8,15 @@ import { errorHandler } from './middleware/errorHandler.js';
 const app: Express = express();
 
 // Standard Operational Middlewares
+const allowedOrigins = process.env.FRONTEND_URL
+  ? [process.env.FRONTEND_URL]
+  : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173'];
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: allowedOrigins,
   credentials: true
 }));
+
 app.use(express.json());
 
 // Mount authentication and authorization routes

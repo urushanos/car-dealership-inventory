@@ -1,6 +1,6 @@
 # Car Dealership Inventory System
 
-A full-stack car dealership inventory management platform built with a TypeScript monorepo consisting of Express, MongoDB (Mongoose), Next.js, and Vitest.
+A full-stack car dealership inventory management platform built with a TypeScript monorepo consisting of Express, MongoDB (Mongoose), React (Vite), and Vitest.
 
 ---
 

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "seed:admin": "tsx scripts/seedAdmin.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "seed:cars": "tsx scripts/seedCars.ts"
   },
   "keywords": [],
   "author": "",
