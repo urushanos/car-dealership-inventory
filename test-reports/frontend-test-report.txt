@@ -1,0 +1,96 @@
+
+> web@0.1.0 test
+> vitest run
+
+ RUN  v5.0.5 C:/Users/Urvi/Documents/Incubyte/car-dealership-inventory/apps/web
+
+ ❯ src/test/api.test.ts [queued]
+ ❯ src/test/ConfirmDialog.test.tsx [queued]
+ ❯ src/test/Login.test.tsx [queued]
+ ❯ src/test/ProtectedRoute.test.tsx [queued]
+
+ ❯ src/test/api.test.ts 0/17
+ ❯ src/test/ConfirmDialog.test.tsx [queued]
+ ❯ src/test/Login.test.tsx [queued]
+ ❯ src/test/ProtectedRoute.test.tsx [queued]
+ ✓ src/test/api.test.ts (17 tests) 71ms
+
+ ❯ src/test/ConfirmDialog.test.tsx [queued]
+ ❯ src/test/Login.test.tsx [queued]
+ ❯ src/test/ProtectedRoute.test.tsx 0/4
+
+ ❯ src/test/ConfirmDialog.test.tsx [queued]
+ ❯ src/test/Login.test.tsx [queued]
+ ❯ src/test/ProtectedRoute.test.tsx 0/4
+ ✓ src/test/ProtectedRoute.test.tsx (4 tests) 578ms
+   ✓ ProtectedRoute (4)
+     ✓ redirects unauthenticated users to login 523ms
+
+ ❯ src/test/ConfirmDialog.test.tsx 0/6
+ ❯ src/test/Login.test.tsx [queued]
+
+ ❯ src/test/ConfirmDialog.test.tsx 1/6
+ ❯ src/test/Login.test.tsx 0/6
+
+ ❯ src/test/ConfirmDialog.test.tsx 2/6
+ ❯ src/test/Login.test.tsx 0/6
+
+ ❯ src/test/ConfirmDialog.test.tsx 4/6
+ ❯ src/test/Login.test.tsx 0/6
+ ✓ src/test/ConfirmDialog.test.tsx (6 tests) 903ms
+   ✓ ConfirmDialog (6)
+     ✓ calls onConfirm when confirmed 556ms
+
+ ❯ src/test/Login.test.tsx 1/6
+ ✓ src/test/VehicleFilters.test.tsx (6 tests) 1133ms
+   ✓ VehicleFilters (6)
+     ✓ renders all search and filter controls 546ms
+ ✓ src/test/VehicleCard.test.tsx (6 tests) 1108ms
+   ✓ VehicleCard (6)
+     ✓ displays vehicle details and price 332ms
+     ✓ disables purchase when quantity is zero 447ms
+ ✓ src/test/Login.test.tsx (6 tests) 2562ms
+   ✓ Login page (6)
+     ✓ renders email, password and sign-in controls 679ms
+     ✓ logs in successfully and navigates to vehicles 704ms
+     ✓ shows an error when credentials are rejected 628ms
+     ✓ redirects to the originally requested page after login 523ms
+ ✓ src/test/VehicleForm.test.tsx (9 tests) 2986ms
+   ✓ VehicleForm (9)
+     ✓ renders the add vehicle form 672ms
+     ✓ submits a new vehicle with numeric price and quantity 818ms
+     ✓ trims whitespace from vehicle fields 594ms
+     ✓ includes VIN when provided 657ms
+stderr | src/test/register.test.tsx > Registration page > disables registration while the request is pending
+An update to MemoryRouter inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to Register inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/test/register.test.tsx (5 tests) 3159ms
+   ✓ Registration page (5)
+     ✓ renders the required registration fields 539ms
+     ✓ registers a new user and navigates to login 1028ms
+     ✓ shows an error when registration fails 767ms
+     ✓ disables registration while the request is pending 804ms
+
+ Test Files  8 passed (8)
+      Tests  59 passed (59)
+   Start at  20:19:21
+   Duration  9.73s (environment 52%, tests 21%, setup 14%, import 8%, transform 4%, worker 1%)
